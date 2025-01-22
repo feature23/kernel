@@ -6,8 +6,8 @@ on:
   pull_request:
     branches: [ main ]
     paths:
-    - '**.cs'
-    - '**.csproj'
+    - '**/*.cs'
+    - '**/*.csproj'
 
 env:
   DOTNET_VERSION: '8.x' # The .NET SDK version to use
