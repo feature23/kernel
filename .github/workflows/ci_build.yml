@@ -9,30 +9,31 @@ on:
     - '**/*.cs'
     - '**/*.csproj'
 
-env:
-  DOTNET_VERSION: '8.x' # The .NET SDK version to use
-
 jobs:
   build:
 
-    name: build-${{matrix.os}}
+    name: build-${{matrix.os}}-${{matrix.dotnet}}
     runs-on: ${{ matrix.os }}
     defaults:
       run:
         working-directory: src
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macOS-latest]
+        os: [ubuntu-latest] #, windows-latest, macOS-latest]
+        dotnet: ['8.x'] # Just a single target for now
 
     steps:
     - uses: actions/checkout@v3
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: ${{ env.DOTNET_VERSION }}
+        dotnet-version: ${{ matrix.dotnet }}
 
     - name: Install dependencies
       run: dotnet restore
       
     - name: Build
       run: dotnet build --configuration Release --no-restore
+
+    - name: Test
+      run: dotnet test --no-restore --verbosity normal

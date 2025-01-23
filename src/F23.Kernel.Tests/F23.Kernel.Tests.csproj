@@ -20,4 +20,9 @@
         <Using Include="Xunit"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\F23.Kernel.AspNetCore\F23.Kernel.AspNetCore.csproj" />
+      <ProjectReference Include="..\F23.Kernel\F23.Kernel.csproj" />
+    </ItemGroup>
+
 </Project>
