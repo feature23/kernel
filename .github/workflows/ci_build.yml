@@ -19,7 +19,7 @@ jobs:
         working-directory: src
     strategy:
       matrix:
-        os: [ubuntu-latest] #, windows-latest, macOS-latest]
+        os: [ubuntu-latest, windows-latest, macOS-latest]
         dotnet: ['8.x'] # Just a single target for now
 
     steps:
