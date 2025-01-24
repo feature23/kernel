@@ -77,5 +77,5 @@ public class EventStream<T> : ISnapshotContainer<T>
         _uncommittedEvents.Clear();
     }
 
-    protected internal T LastCommittedSnapshot_FOR_UNIT_TESTING => _lastCommittedSnapshot;
+    internal T LastCommittedSnapshot_FOR_UNIT_TESTING => _lastCommittedSnapshot;
 }

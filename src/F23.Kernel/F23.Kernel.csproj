@@ -7,6 +7,10 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <InternalsVisibleTo Include="F23.Kernel.Tests" />
+    </ItemGroup>
+
+    <ItemGroup>
       <PackageReference Include="JetBrains.Annotations" Version="2024.3.0" />
       <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
       <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.2" />
