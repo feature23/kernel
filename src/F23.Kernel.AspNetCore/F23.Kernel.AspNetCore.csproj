@@ -7,6 +7,10 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <InternalsVisibleTo Include="F23.Kernel.Tests" />
+    </ItemGroup>
+    
+    <ItemGroup>
       <ProjectReference Include="..\F23.Kernel\F23.Kernel.csproj" />
     </ItemGroup>
 
