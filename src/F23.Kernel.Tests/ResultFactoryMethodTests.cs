@@ -1,4 +1,5 @@
 using F23.Kernel.Results;
+using F23.Kernel.Tests.Mocks;
 
 namespace F23.Kernel.Tests;
 
@@ -116,6 +117,22 @@ public class ResultFactoryMethodTests
     }
 
     [Fact]
+    public void ValidationFailedT_SharedKey_ReturnsValidationFailedResult()
+    {
+        // Arrange
+        var errors = new List<ValidationError> { new("key", "message") };
+
+        // Act
+        var result = Result<TestResultContent>.ValidationFailed("shared_key", errors);
+
+        // Assert
+        var validationFailedResult = Assert.IsType<ValidationFailedResult<TestResultContent>>(result);
+        var error = Assert.Single(validationFailedResult.Errors);
+        Assert.Equal("shared_key", error.Key);
+        Assert.Equal("message", error.Message);
+    }
+
+    [Fact]
     public void ValidationFailedT_SingleError_ReturnsValidationFailedResult()
     {
         // Arrange
@@ -163,8 +180,4 @@ public class ResultFactoryMethodTests
         Assert.Equal(reason, preconditionFailedResult.Reason);
         Assert.Equal(message, preconditionFailedResult.Message);
     }
-
-    // TODO.JB - test mapping methods
-
-    private class TestResultContent;
 }
