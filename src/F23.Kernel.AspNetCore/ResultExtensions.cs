@@ -6,8 +6,30 @@ using UnauthorizedResult = Microsoft.AspNetCore.Mvc.UnauthorizedResult;
 
 namespace F23.Kernel.AspNetCore;
 
+/// <summary>
+/// Provides extension methods for converting <see cref="Result"/> objects to <see cref="IActionResult"/> objects.
+/// </summary>
 public static class ResultExtensions
 {
+    /// <summary>
+    /// Converts a <see cref="Result"/> into an appropriate <see cref="IActionResult"/>
+    /// that represents the result to be sent in an HTTP response.
+    /// </summary>
+    /// <param name="result">The <see cref="Result"/> to be converted.</param>
+    /// <returns>
+    /// An <see cref="IActionResult"/> representing the HTTP response:
+    /// <list type="bullet">
+    /// <item>A <see cref="NoContentResult"/> for successful results.</item>
+    /// <item>A <see cref="NotFoundResult"/> for a <see cref="PreconditionFailedResult"/> indicating <see cref="PreconditionFailedReason.NotFound"/>.</item>
+    /// <item>A <see cref="StatusCodeResult"/> with HTTP status code 412 for a <see cref="PreconditionFailedResult"/> indicating <see cref="PreconditionFailedReason.ConcurrencyMismatch"/>.</item>
+    /// <item>A <see cref="ConflictResult"/> for a <see cref="PreconditionFailedResult"/> indicating <see cref="PreconditionFailedReason.Conflict"/>.</item>
+    /// <item>A <see cref="BadRequestObjectResult"/> with model state populated for a <see cref="ValidationFailedResult"/>.</item>
+    /// <item>An <see cref="F23.Kernel.Results.UnauthorizedResult"/> in case of an <see cref="UnauthorizedResult"/>.</item>
+    /// </list>
+    /// </returns>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when the <paramref name="result"/> does not match any known result types.
+    /// </exception>
     public static IActionResult ToActionResult(this Result result)
         => result switch
         {
@@ -22,6 +44,32 @@ public static class ResultExtensions
             _ => throw new ArgumentOutOfRangeException(nameof(result))
         };
 
+    /// <summary>
+    /// Converts a <see cref="Result"/> into an appropriate <see cref="IActionResult"/>
+    /// that represents the result to be sent in an HTTP response.
+    /// </summary>
+    /// <typeparam name="T">The type of the value contained in the result, if successful.</typeparam>
+    /// <param name="result">The result instance to convert.</param>
+    /// <param name="successMap">
+    /// An optional function to map a successful result to a custom <see cref="IActionResult"/>.
+    /// If not provided, a default mapping is applied.
+    /// </param>
+    /// An <see cref="IActionResult"/> representing the HTTP response:
+    /// <returns>
+    /// An <see cref="IActionResult"/> representing the HTTP response:
+    /// <list type="bullet">
+    /// <item>The result of the specified mapping for successful results, when <paramref name="successMap"/> is specified.</item>
+    /// <item>An <see cref="OkObjectResult"/> for successful results when <paramref name="successMap"/> is not specified.</item>
+    /// <item>A <see cref="NotFoundResult"/> for a <see cref="PreconditionFailedResult"/> indicating <see cref="PreconditionFailedReason.NotFound"/>.</item>
+    /// <item>A <see cref="StatusCodeResult"/> with HTTP status code 412 for a <see cref="PreconditionFailedResult"/> indicating <see cref="PreconditionFailedReason.ConcurrencyMismatch"/>.</item>
+    /// <item>A <see cref="ConflictResult"/> for a <see cref="PreconditionFailedResult"/> indicating <see cref="PreconditionFailedReason.Conflict"/>.</item>
+    /// <item>A <see cref="BadRequestObjectResult"/> with model state populated for a <see cref="ValidationFailedResult"/>.</item>
+    /// <item>An <see cref="F23.Kernel.Results.UnauthorizedResult"/> in case of an <see cref="UnauthorizedResult"/>.</item>
+    /// </list>
+    /// </returns>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when the <paramref name="result"/> does not match any known result types.
+    /// </exception>
     public static IActionResult ToActionResult<T>(this Result<T> result, Func<T, IActionResult>? successMap = null)
         => result switch
         {

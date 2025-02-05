@@ -6,6 +6,14 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+      <DocumentationFile>bin\Debug\net8.0\F23.Kernel.AspNetCore.xml</DocumentationFile>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+      <DocumentationFile>bin\Release\net8.0\F23.Kernel.AspNetCore.xml</DocumentationFile>
+    </PropertyGroup>
+
     <ItemGroup>
         <InternalsVisibleTo Include="F23.Kernel.Tests" />
     </ItemGroup>
