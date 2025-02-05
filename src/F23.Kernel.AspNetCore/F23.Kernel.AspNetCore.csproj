@@ -19,12 +19,16 @@
     </ItemGroup>
     
     <ItemGroup>
+        <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    </ItemGroup>
+    
+    <ItemGroup>
       <ProjectReference Include="..\F23.Kernel\F23.Kernel.csproj" />
     </ItemGroup>
 
     <ItemGroup>
       <PackageReference Include="F23.Hateoas" Version="1.0.0" />
-      <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.3.0" />
+<!--      <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.3.0" />-->
     </ItemGroup>
 
 </Project>

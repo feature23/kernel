@@ -21,8 +21,10 @@ public class ModelStateExtensionsTests
 
         // Assert
         Assert.Equal(2, modelState.ErrorCount);
-        Assert.Equal("error1", modelState["key1"].Errors.First().ErrorMessage);
-        Assert.Equal("error2", modelState["key2"].Errors.First().ErrorMessage);
+        Assert.True(modelState.TryGetValue("key1", out var error1));
+        Assert.Equal("error1", error1.Errors.First().ErrorMessage);
+        Assert.True(modelState.TryGetValue("key2", out var error2));
+        Assert.Equal("error2", error2.Errors.First().ErrorMessage);
     }
 
     [Fact]
@@ -63,7 +65,9 @@ public class ModelStateExtensionsTests
 
         // Assert
         Assert.Equal(2, modelState.ErrorCount);
-        Assert.Equal("error1", modelState["key1"].Errors.First().ErrorMessage);
-        Assert.Equal("error2", modelState["key2"].Errors.First().ErrorMessage);
+        Assert.True(modelState.TryGetValue("key1", out var error1));
+        Assert.Equal("error1", error1.Errors.First().ErrorMessage);
+        Assert.True(modelState.TryGetValue("key2", out var error2));
+        Assert.Equal("error2", error2.Errors.First().ErrorMessage);
     }
 }

@@ -1,0 +1,6 @@
+@F23.Kernel.Examples.AspNetCore_HostAddress = http://localhost:5002
+
+GET {{F23.Kernel.Examples.AspNetCore_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
