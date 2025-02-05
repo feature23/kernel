@@ -5,6 +5,10 @@ namespace F23.Kernel.EventSourcing;
 /// </summary>
 public static class EventStream;
 
+/// <summary>
+/// Represents an event stream for an aggregate root, managing both committed and uncommitted events.
+/// </summary>
+/// <typeparam name="T">The type of the aggregate root.</typeparam>
 public class EventStream<T> : ISnapshotContainer<T>
     where T : IAggregateRoot
 {
@@ -34,16 +38,35 @@ public class EventStream<T> : ISnapshotContainer<T>
         _lastCommittedSnapshot = snapshot;
     }
 
+    /// <summary>
+    /// Gets the ID of the snapshot.
+    /// </summary>
     public string Id => Snapshot.Id;
 
+    /// <summary>
+    /// Gets the list of committed events.
+    /// </summary>
     public IReadOnlyList<IEvent> CommittedEvents => _committedEvents;
 
+    /// <summary>
+    /// Gets the list of uncommitted events.
+    /// </summary>
     public IReadOnlyList<IEvent> UncommittedEvents => _uncommittedEvents;
 
+    /// <summary>
+    /// Gets all events, both committed and uncommitted.
+    /// </summary>
     public IEnumerable<IEvent> AllEvents => _committedEvents.Concat(_uncommittedEvents);
 
+    /// <summary>
+    /// Gets the current snapshot of the aggregate root.
+    /// </summary>
     public T Snapshot { get; private set; }
 
+    /// <summary>
+    /// Applies an event to the aggregate root.
+    /// </summary>
+    /// <param name="e">The event to apply.</param>
     public void Apply(IEvent e)
     {
         if (e is ICreationEvent)
@@ -64,6 +87,9 @@ public class EventStream<T> : ISnapshotContainer<T>
         _uncommittedEvents.Add(e);
     }
 
+    /// <summary>
+    /// Commits all uncommitted events.
+    /// </summary>
     public void Commit()
     {
         _committedEvents.AddRange(_uncommittedEvents);
@@ -71,11 +97,19 @@ public class EventStream<T> : ISnapshotContainer<T>
         _lastCommittedSnapshot = Snapshot;
     }
 
+    /// <summary>
+    /// Rolls back all uncommitted events.
+    /// </summary>
     public void Rollback()
     {
         Snapshot = _lastCommittedSnapshot;
         _uncommittedEvents.Clear();
     }
 
+    /// <summary>
+    /// Gets the last committed snapshot for unit testing purposes.
+    ///
+    /// SHOULD NOT BE USED IN PRODUCTION CODE.
+    /// </summary>
     internal T LastCommittedSnapshot_FOR_UNIT_TESTING => _lastCommittedSnapshot;
 }
