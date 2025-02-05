@@ -76,7 +76,7 @@ public static class ResultExtensions
             PreconditionFailedResult { Reason: PreconditionFailedReason.Conflict } =>
                 Microsoft.AspNetCore.Http.Results.Conflict(),
             ValidationFailedResult validationFailed =>
-                Microsoft.AspNetCore.Http.Results.BadRequest(validationFailed.Errors),
+                Microsoft.AspNetCore.Http.Results.BadRequest(validationFailed.Errors.ToModelState()),
             F23.Kernel.Results.UnauthorizedResult => Microsoft.AspNetCore.Http.Results.Unauthorized(),
             _ => throw new ArgumentOutOfRangeException(nameof(result))
         };
@@ -145,7 +145,7 @@ public static class ResultExtensions
         => result switch
         {
             SuccessResult<T> success when successMap != null => successMap(success.Value),
-            SuccessResult<T> success => Microsoft.AspNetCore.Http.Results.Ok(success.Value),
+            SuccessResult<T> success => Microsoft.AspNetCore.Http.Results.Ok(new HypermediaResponse(success.Value)),
             PreconditionFailedResult<T> { Reason: PreconditionFailedReason.NotFound } =>
                 Microsoft.AspNetCore.Http.Results.NotFound(),
             PreconditionFailedResult<T> { Reason: PreconditionFailedReason.ConcurrencyMismatch } =>
