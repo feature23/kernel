@@ -24,6 +24,9 @@ env:
 jobs:
   create_nuget:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: src
     steps:
     - uses: actions/checkout@v3
       with:
@@ -44,6 +47,9 @@ jobs:
 
   run_test:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: src
     steps:
     - uses: actions/checkout@v3
     - name: Setup .NET
@@ -57,6 +63,9 @@ jobs:
     # You can update this logic if you want to manage releases differently
     if: github.event_name == 'release'
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: src
     needs: [ create_nuget, run_test ]
     steps:
       # Download the NuGet package created in the previous job
