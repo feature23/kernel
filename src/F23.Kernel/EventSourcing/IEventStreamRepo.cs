@@ -23,7 +23,6 @@ public interface IEventStreamRepo<T>
     /// <summary>
     /// Commits an event stream by marking all uncommitted events in the stream as committed and persisting them to the data store.
     /// </summary>
-    /// <typeparam name="T">The type of the aggregate root associated with the event stream.</typeparam>
     /// <param name="stream">The event stream containing the uncommitted events to be committed.</param>
     /// <param name="userId">The identifier of the user performing the operation. This parameter is optional.</param>
     /// <param name="cancellationToken">A cancellation token that can be used to cancel the asynchronous operation. Defaults to <see cref="CancellationToken.None"/>.</param>

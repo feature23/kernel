@@ -20,8 +20,6 @@ public interface IAggregateRootFactory<T, in TCreationEvent>
     /// <summary>
     /// Creates an aggregate root instance of type <typeparamref name="T"/> based on the specified creation event.
     /// </summary>
-    /// <typeparam name="T">The type of the aggregate root being created.</typeparam>
-    /// <typeparam name="TCreationEvent">The type of the creation event required to create the aggregate root.</typeparam>
     /// <param name="creationEvent">The event that contains the information needed to create the aggregate root.</param>
     /// <param name="cancellationToken">An optional cancellation token to observe during the asynchronous creation process.</param>
     /// <returns>

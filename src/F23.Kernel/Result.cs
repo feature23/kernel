@@ -14,7 +14,7 @@ public abstract class Result(bool isSuccess)
     public bool IsSuccess { get; } = isSuccess;
 
     /// <summary>
-    /// Gets the message associated with the result.
+    /// Gets a message describing the outcome of the operation.
     /// </summary>
     public abstract string Message { get; }
 
