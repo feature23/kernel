@@ -20,16 +20,6 @@ public interface IEvent : IDomainEvent, IValidatable
     string EventType { get; }
 
     /// <summary>
-    /// Gets or sets the identifier of the user profile associated with the event.
-    /// </summary>
-    /// <remarks>
-    /// This property links an event to a specific user profile, enabling tracking or filtering of events
-    /// related to a particular user. It is nullable to support scenarios where the event is not
-    /// raised by a user.
-    /// </remarks>
-    string? UserProfileId { get; set; }
-
-    /// <summary>
     /// Gets or sets the date and time at which the event occurred.
     /// </summary>
     /// <remarks>

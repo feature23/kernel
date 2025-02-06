@@ -13,11 +13,6 @@ public abstract record EventBase : IEvent
     public string EventType => GetType().Name;
 
     /// <summary>
-    /// Gets or sets the user profile ID associated with the event.
-    /// </summary>
-    public string? UserProfileId { get; set; }
-
-    /// <summary>
     /// Gets or sets the date and time when the event occurred. Defaults to the current UTC date and time.
     /// </summary>
     public DateTime OccurredAt { get; set; } = DateTime.UtcNow;
