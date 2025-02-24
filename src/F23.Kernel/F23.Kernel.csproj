@@ -4,6 +4,20 @@
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <Version>0.1.0</Version>
+        <Authors>feature[23]</Authors>
+        <Copyright>feature[23]</Copyright>
+        <PackageProjectUrl>https://github.com/feature23/kernel</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/feature23/kernel</RepositoryUrl>
+        <PackageLicenseUrl>https://github.com/feature23/kernel/blob/main/LICENSE</PackageLicenseUrl>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+      <DocumentationFile>bin\Debug\net8.0\F23.Kernel.xml</DocumentationFile>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+      <DocumentationFile>bin\Release\net8.0\F23.Kernel.xml</DocumentationFile>
     </PropertyGroup>
 
     <ItemGroup>

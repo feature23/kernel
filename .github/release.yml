@@ -1,0 +1,19 @@
+changelog:
+  exclude:
+    labels:
+      - notes:ignore
+    authors:
+      - dependabot
+  categories:
+    - title: 💥 Breaking Changes
+      labels:
+        - notes:breaking-change
+    - title: 🎉 New Features
+      labels:
+        - notes:new-feature
+    - title: 🐞 Bug Fixes
+      labels:
+        - notes:bug-fix
+    - title: 💪 Other Changes
+      labels:
+        - "*"

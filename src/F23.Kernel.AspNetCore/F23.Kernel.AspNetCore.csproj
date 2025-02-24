@@ -4,10 +4,28 @@
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <Version>0.1.0</Version>
+        <Authors>feature[23]</Authors>
+        <Copyright>feature[23]</Copyright>
+        <PackageProjectUrl>https://github.com/feature23/kernel</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/feature23/kernel</RepositoryUrl>
+        <PackageLicenseUrl>https://github.com/feature23/kernel/blob/main/LICENSE</PackageLicenseUrl>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+      <DocumentationFile>bin\Debug\net8.0\F23.Kernel.AspNetCore.xml</DocumentationFile>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+      <DocumentationFile>bin\Release\net8.0\F23.Kernel.AspNetCore.xml</DocumentationFile>
     </PropertyGroup>
 
     <ItemGroup>
         <InternalsVisibleTo Include="F23.Kernel.Tests" />
+    </ItemGroup>
+    
+    <ItemGroup>
+        <FrameworkReference Include="Microsoft.AspNetCore.App" />
     </ItemGroup>
     
     <ItemGroup>
@@ -16,7 +34,7 @@
 
     <ItemGroup>
       <PackageReference Include="F23.Hateoas" Version="1.0.0" />
-      <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.3.0" />
+<!--      <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.3.0" />-->
     </ItemGroup>
 
 </Project>
