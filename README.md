@@ -2,13 +2,19 @@
 
 [![build](https://github.com/feature23/kernel/actions/workflows/ci_build.yml/badge.svg)](https://github.com/feature23/kernel/actions/workflows/ci_build.yml)
 
-A library of reusable types for implementing Clean Architecture in .NET and ASP.NET Core applications, based heavily on the work of [Steve Smith](https://github.com/ardalis) in the following open-sourcee projects:
+A library of reusable types for implementing Clean Architecture in .NET and ASP.NET Core applications, based heavily on the work of [Steve Smith](https://github.com/ardalis) in the following open-source projects:
 - [ASP.NET Core Template](https://github.com/ardalis/CleanArchitecture)
 - [Shared Kernel](https://github.com/ardalis/Ardalis.SharedKernel)
 
 For the core functionality, only the `F23.Kernel` library is needed. This library provides types for events, results, query and command handlers, validation, and messaging. For smoother integration with ASP.NET Core, the `F23.Kernel.AspNetCore` library can be used for easily mapping between core result types and ASP.NET Core `IActionResult` and model state.
 
 > **WARNING:** This library is currently in a pre-release state, and breaking changes may occur before reaching version 1.0.
+>
+---
+
+**What if your day job was contributing to open-source projects and custom AI solutions &mdash; and you got paid for it?**<br />
+We're hiring remote engineers to contribute to cutting-edge AI and custom software projects. 100% remote, 100% real impact. https://www.feature23.com/careers
+
 
 ## NuGet Installation
 ### Core Package
