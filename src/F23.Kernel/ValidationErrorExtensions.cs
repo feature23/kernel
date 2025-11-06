@@ -9,7 +9,7 @@ public static class ValidationErrorExtensions
     /// Creates a dictionary of error messages from the given <paramref name="validationErrors"/>.
     /// </summary>
     /// <param name="validationErrors">The validation errors.</param>
-    /// <returns>>A dictionary where the keys are the field names and the values are arrays of error messages.</returns>
+    /// <returns>A dictionary where the keys are the field names and the values are arrays of error messages.</returns>
     /// <remarks>
     /// This is adapted from MIT-licensed code from .NET, in Microsoft.AspNetCore.Mvc.ValidationProblemDetails.
     /// <para />
@@ -25,7 +25,18 @@ public static class ValidationErrorExtensions
 
         foreach (var (key, message) in validationErrors)
         {
-            errorDictionary.Add(key, [message]);
+            if (errorDictionary.TryGetValue(key, out var messages))
+            {
+                // Inefficient, but probably better than allocating a List for each just to convert it back to an array.
+                var updatedMessages = new string[messages.Length + 1];
+                messages.CopyTo(updatedMessages, 0);
+                updatedMessages[^1] = message;
+                errorDictionary[key] = updatedMessages;
+            }
+            else
+            {
+                errorDictionary.Add(key, [message]);
+            }
         }
 
         return errorDictionary;
