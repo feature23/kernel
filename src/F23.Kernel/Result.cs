@@ -156,6 +156,22 @@ public abstract class Result<T>(bool isSuccess) : Result(isSuccess)
         };
 
     /// <summary>
+    /// Maps a generic value Result to a non-generic Result.
+    /// </summary>
+    /// <returns>A <see cref="Result"/> instance that corresponds to the type of the current result.</returns>
+    /// <exception cref="InvalidOperationException">Thrown if the current result type is unrecognized.</exception>
+    public Result Map() =>
+        this switch
+        {
+            SuccessResult<T> => Success(),
+            PreconditionFailedResult<T> preconditionFailed => Result.PreconditionFailed(preconditionFailed.Reason),
+            UnauthorizedResult<T> unauthorized => Result.Unauthorized(unauthorized.Message),
+            ValidationFailedResult<T> validationFailed => Result.ValidationFailed(validationFailed.Errors),
+            ValidationPassedResult<T> => new ValidationPassedResult(),
+            _ => throw new InvalidOperationException("Unknown result type")
+        };
+
+    /// <summary>
     /// Logs the failure result to the specified <see cref="ILogger"/>.
     /// </summary>
     /// <param name="logger">The logger.</param>
@@ -178,6 +194,7 @@ public abstract class Result<T>(bool isSuccess) : Result(isSuccess)
                 break;
             default:
                 throw new InvalidOperationException("Unknown result type");
-        };
+        }
+        ;
     }
 }
