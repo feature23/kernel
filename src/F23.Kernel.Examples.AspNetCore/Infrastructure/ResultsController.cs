@@ -1,4 +1,3 @@
-using F23.Kernel;
 using F23.Kernel.AspNetCore;
 using F23.Kernel.Results;
 using Microsoft.AspNetCore.Mvc;
@@ -18,6 +17,7 @@ public class ResultsController : ControllerBase
     /// </summary>
     /// <returns>204 No Content</returns>
     [HttpGet("success-no-value")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     public IActionResult SuccessNoValue()
     {
         var result = Result.Success();
@@ -29,6 +29,7 @@ public class ResultsController : ControllerBase
     /// </summary>
     /// <returns>200 OK with the value in the response body</returns>
     [HttpGet("success-with-value")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     public IActionResult SuccessWithValue()
     {
         var data = new { message = "Operation completed successfully", timestamp = DateTime.UtcNow };
@@ -41,6 +42,7 @@ public class ResultsController : ControllerBase
     /// </summary>
     /// <returns>400 Bad Request with validation errors</returns>
     [HttpGet("validation-failed")]
+    [ProducesResponseType<ValidationProblemDetails>(StatusCodes.Status400BadRequest)]
     public IActionResult ValidationFailed()
     {
         var errors = new[]
@@ -58,6 +60,7 @@ public class ResultsController : ControllerBase
     /// </summary>
     /// <returns>403 Forbidden</returns>
     [HttpGet("unauthorized")]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status403Forbidden)]
     public IActionResult UnauthorizedDemo()
     {
         var result = Result.Unauthorized("User does not have permission to access this resource");
@@ -69,6 +72,7 @@ public class ResultsController : ControllerBase
     /// </summary>
     /// <returns>404 Not Found</returns>
     [HttpGet("not-found")]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
     public IActionResult NotFoundDemo()
     {
         var result = Result.PreconditionFailed(
@@ -83,6 +87,7 @@ public class ResultsController : ControllerBase
     /// </summary>
     /// <returns>412 Precondition Failed</returns>
     [HttpGet("concurrency-mismatch")]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status412PreconditionFailed)]
     public IActionResult ConcurrencyMismatch()
     {
         var result = Result.PreconditionFailed(
@@ -97,6 +102,7 @@ public class ResultsController : ControllerBase
     /// </summary>
     /// <returns>409 Conflict</returns>
     [HttpGet("conflict")]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status409Conflict)]
     public IActionResult ConflictDemo()
     {
         var result = Result.PreconditionFailed(
