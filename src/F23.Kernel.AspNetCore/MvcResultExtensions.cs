@@ -104,7 +104,7 @@ public static class MvcResultExtensions
             SuccessResult<T> success when successMap != null
                 => successMap(success.Value),
             SuccessResult<T> success
-                => new OkObjectResult(new HypermediaResponse(success.Value)),
+                => new OkObjectResult(new HypermediaResponse(success.Value!)), // [!]: TODO: Fix nullability issue in F23.Hateoas
             PreconditionFailedResult<T> { Reason: PreconditionFailedReason.NotFound } when useProblemDetails
                 => result.ToProblemDetailsResult(HttpStatusCode.NotFound),
             PreconditionFailedResult<T> { Reason: PreconditionFailedReason.NotFound } when !useProblemDetails
