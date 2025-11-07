@@ -93,21 +93,16 @@ public class ResultMappingTests
     public void GenericSuccessResult_IsConvertedTo_NonGenericSuccessResult()
     {
         var genericResult = Result<int>.Success(42);
-        var plainResult = genericResult.Map();
 
-        Assert.IsType<SuccessResult>(plainResult);
+        Assert.IsType<SuccessResult>(genericResult.Map());
     }
 
     [Fact]
     public void GenericValidationFailedResult_IsConvertedTo_NonGenericValidationFailedResult()
     {
         var genericResult = Result<int>.ValidationFailed("key", "message");
-        var plainResult = genericResult.Map();
 
-        if (plainResult is not ValidationFailedResult validationFailedResult)
-        {
-            throw new InvalidOperationException("The converted result is not a ValidationFailedResult.");
-        }
+        var validationFailedResult = Assert.IsType<ValidationFailedResult>(genericResult.Map());
 
         Assert.Single(validationFailedResult.Errors);
         Assert.Equal("key", validationFailedResult.Errors.First().Key);
@@ -118,12 +113,8 @@ public class ResultMappingTests
     public void GenericValidationPassedResult_IsConvertedTo_NonGenericValidationPassedResult()
     {
         var genericResult = new ValidationPassedResult<int>();
-        var plainResult = genericResult.Map();
 
-        if (plainResult is not ValidationPassedResult validationFailedResult)
-        {
-            throw new InvalidOperationException("The converted result is not a ValidationFailedResult.");
-        }
+        var validationFailedResult = Assert.IsType<ValidationPassedResult>(genericResult.Map());
 
         Assert.Equal("Validation passed", validationFailedResult.Message);
     }
@@ -132,12 +123,8 @@ public class ResultMappingTests
     public void GenericUnauthorizedResult_IsConvertedTo_NonGenericUnauthorizedResult()
     {
         var genericResult = Result<int>.Unauthorized("Something went wrong.");
-        var plainResult = genericResult.Map();
 
-        if (plainResult is not UnauthorizedResult unauthorizedResult)
-        {
-            throw new InvalidOperationException("The converted result is not an UnauthorizedResult.");
-        }
+        var unauthorizedResult = Assert.IsType<UnauthorizedResult>(genericResult.Map());
 
         Assert.Equal("Something went wrong.", unauthorizedResult.Message);
     }
@@ -146,12 +133,8 @@ public class ResultMappingTests
     public void GenericPreconditionFailedResult_IsConvertedTo_NonGenericPreconditionFailedResult()
     {
         var genericResult = Result<int>.PreconditionFailed(PreconditionFailedReason.NotFound);
-        var plainResult = genericResult.Map();
 
-        if (plainResult is not PreconditionFailedResult preconditionFailedResult)
-        {
-            throw new InvalidOperationException("The converted result is not a PreconditionFailedResult.");
-        }
+        var preconditionFailedResult = Assert.IsType<PreconditionFailedResult>(genericResult.Map());
 
         Assert.Equal(PreconditionFailedReason.NotFound, preconditionFailedResult.Reason);
     }

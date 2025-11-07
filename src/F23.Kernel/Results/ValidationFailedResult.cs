@@ -39,4 +39,10 @@ public class ValidationFailedResult<T>(IReadOnlyCollection<ValidationError> erro
     /// including the key associated with each error and its corresponding message.
     /// </remarks>
     public IReadOnlyCollection<ValidationError> Errors => errors;
+
+    /// <summary>
+    /// Maps the current validation errors to a <see cref="ValidationFailedResult"/>.
+    /// </summary>
+    /// <returns>A non-generic <see cref="ValidationFailedResult"/> containing the validation errors.</returns>
+    public override Result Map() => new ValidationFailedResult(Errors);
 }

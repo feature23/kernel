@@ -47,4 +47,10 @@ public class PreconditionFailedResult<T>(PreconditionFailedReason reason, string
     /// <see cref="PreconditionFailedReason"/> value.
     /// </summary>
     public override string Message => message ?? Reason.ToMessage();
+
+    /// <summary>
+    /// Maps this generic precondition failed result to a non-generic precondition failed result.
+    /// </summary>
+    /// <returns>A non-generic <see cref="PreconditionFailedResult"/>.</returns>
+    public override Result Map() => new PreconditionFailedResult(Reason, Message);
 }

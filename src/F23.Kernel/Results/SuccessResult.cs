@@ -30,4 +30,10 @@ public class SuccessResult<T>(T value) : Result<T>(true)
     /// This represents the successful outcome of the operation when the result is a <see cref="SuccessResult{T}"/>.
     /// </summary>
     public T Value => value;
+
+    /// <summary>
+    /// Maps the current object to a successful result.
+    /// </summary>
+    /// <returns>A <see cref="Result"/> instance representing a successful operation.</returns>
+    public override Result Map() => Success();
 }

@@ -3,7 +3,6 @@ using F23.Hateoas;
 using F23.Kernel.AspNetCore;
 using F23.Kernel.Results;
 using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace F23.Kernel.Tests.AspNetCore;
@@ -76,7 +75,7 @@ public class MinimalApiResultExtensionsTests
 
         // Assert
         var statusCodeResult = Assert.IsType<StatusCodeHttpResult>(actionResult);
-        Assert.Equal((int) HttpStatusCode.PreconditionFailed, statusCodeResult.StatusCode);
+        Assert.Equal((int)HttpStatusCode.PreconditionFailed, statusCodeResult.StatusCode);
     }
 
     [Fact]
@@ -179,7 +178,7 @@ public class MinimalApiResultExtensionsTests
 
         // Assert
         var statusCodeResult = Assert.IsType<StatusCodeHttpResult>(actionResult);
-        Assert.Equal((int) HttpStatusCode.PreconditionFailed, statusCodeResult.StatusCode);
+        Assert.Equal((int)HttpStatusCode.PreconditionFailed, statusCodeResult.StatusCode);
     }
 
     [Fact]
@@ -424,5 +423,10 @@ public class MinimalApiResultExtensionsTests
     private class TestUnhandledResult<T>() : Result<T>(true)
     {
         public override string Message => "whoopsie";
+
+        public override Result Map()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
