@@ -97,7 +97,7 @@ public static class MinimalApiResultExtensions
             SuccessResult<T> success when successMap != null
                 => successMap(success.Value),
             SuccessResult<T> success
-                => HttpResults.Ok(new HypermediaResponse(success.Value)),
+                => HttpResults.Ok(new HypermediaResponse(success.Value!)), // [!]: TODO: Fix nullability issue in F23.Hateoas
             PreconditionFailedResult<T> { Reason: PreconditionFailedReason.NotFound } when useProblemDetails
                 => result.ToProblemHttpResult(HttpStatusCode.NotFound),
             PreconditionFailedResult<T> { Reason: PreconditionFailedReason.NotFound } when !useProblemDetails

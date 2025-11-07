@@ -21,6 +21,5 @@ public interface IApplyEvent<out TSnapshot, in TEvent>
     /// Applies the specified event to the aggregate root and updates its state accordingly.
     /// </summary>
     /// <param name="e">The event to be applied to the aggregate root.</param>
-    [UsedImplicitly]
     TSnapshot Apply(TEvent e);
 }
