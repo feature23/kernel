@@ -10,7 +10,7 @@
         <Copyright>feature[23]</Copyright>
         <PackageProjectUrl>https://github.com/feature23/kernel</PackageProjectUrl>
         <RepositoryUrl>https://github.com/feature23/kernel</RepositoryUrl>
-        <PackageLicenseUrl>https://github.com/feature23/kernel/blob/main/LICENSE</PackageLicenseUrl>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
