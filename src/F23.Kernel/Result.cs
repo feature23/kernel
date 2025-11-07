@@ -156,6 +156,12 @@ public abstract class Result<T>(bool isSuccess) : Result(isSuccess)
         };
 
     /// <summary>
+    /// Maps the implementing generic Result to a non-generic <see cref="Result"/>.
+    /// </summary>
+    /// <returns>A new non-generic <see cref="Result"/>.</returns>
+    public abstract Result Map();
+
+    /// <summary>
     /// Logs the failure result to the specified <see cref="ILogger"/>.
     /// </summary>
     /// <param name="logger">The logger.</param>
@@ -178,6 +184,7 @@ public abstract class Result<T>(bool isSuccess) : Result(isSuccess)
                 break;
             default:
                 throw new InvalidOperationException("Unknown result type");
-        };
+        }
+        ;
     }
 }

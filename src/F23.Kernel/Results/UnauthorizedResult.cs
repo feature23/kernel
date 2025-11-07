@@ -21,4 +21,10 @@ public class UnauthorizedResult<T>(string message) : Result<T>(false)
     /// Gets a message describing the outcome of the operation.
     /// </summary>
     public override string Message => message;
+
+    /// <summary>
+    /// Maps to a non-generic unauthorized result.
+    /// </summary>
+    /// <returns>A non-generic <see cref="UnauthorizedResult"/>.</returns>
+    public override Result Map() => Result.Unauthorized(message);
 }

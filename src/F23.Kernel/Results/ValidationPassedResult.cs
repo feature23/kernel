@@ -21,4 +21,10 @@ public class ValidationPassedResult<T>() : ValidationResult<T>(true)
     /// Gets a message describing the outcome of the operation.
     /// </summary>
     public override string Message => "Validation passed";
+
+    /// <summary>
+    /// Maps to a non-generic <see cref="ValidationPassedResult"/> instance.
+    /// </summary>
+    /// <returns>A non-generic <see cref="ValidationPassedResult"/>.</returns>
+    public override Result Map() => new ValidationPassedResult();
 }
