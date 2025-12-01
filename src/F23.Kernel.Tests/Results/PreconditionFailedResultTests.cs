@@ -16,4 +16,27 @@ public class PreconditionFailedResultTests
         // Assert
         Assert.False(result.IsSuccess);
     }
+
+    [Theory]
+    [InlineData(PreconditionFailedReason.NotFound)]
+    [InlineData(PreconditionFailedReason.ConcurrencyMismatch)]
+    [InlineData(PreconditionFailedReason.Conflict)]
+    public void MappingPreconditionFailedResultToOther_PreservesTheReasonAndMessage(PreconditionFailedReason reason)
+    {
+        // Arrange
+        var originalMessage = "Original failure message";
+        var originalResult = new PreconditionFailedResult<Original>(reason, originalMessage);
+
+        // Act
+        var mappedResult = originalResult.MapFailure<Other>();
+
+        // Assert
+        var preconditionFailedResult = Assert.IsType<PreconditionFailedResult<Other>>(mappedResult);
+        Assert.Equal(reason, preconditionFailedResult.Reason);
+        Assert.Equal(originalMessage, preconditionFailedResult.Message);
+    }
+
+    private class Original { }
+
+    private class Other { }
 }

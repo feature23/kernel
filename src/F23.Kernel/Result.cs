@@ -151,7 +151,7 @@ public abstract class Result<T>(bool isSuccess) : Result(isSuccess)
             SuccessResult<T> => throw new InvalidOperationException("Cannot map failure on success result"),
             ValidationFailedResult<T> validationFailed => Result<TOther>.ValidationFailed(validationFailed.Errors),
             UnauthorizedResult<T> unauthorized => Result<TOther>.Unauthorized(unauthorized.Message),
-            PreconditionFailedResult<T> preconditionFailed => Result<TOther>.PreconditionFailed(preconditionFailed.Reason),
+            PreconditionFailedResult<T> preconditionFailed => Result<TOther>.PreconditionFailed(preconditionFailed.Reason, preconditionFailed.Message),
             _ => throw new InvalidOperationException("Unknown result type")
         };
 
