@@ -4,7 +4,7 @@ using F23.Kernel.AspNetCore;
 using F23.Kernel.Examples.AspNetCore.Core;
 using F23.Kernel.Examples.AspNetCore.Infrastructure;
 using F23.Kernel.Examples.AspNetCore.UseCases.GetWeatherForecast;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 
 var builder = WebApplication.CreateBuilder(args);
 
