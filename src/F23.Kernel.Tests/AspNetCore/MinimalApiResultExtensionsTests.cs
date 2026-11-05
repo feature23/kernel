@@ -446,19 +446,4 @@ public class MinimalApiResultExtensionsTests
             Assert.Equal("message", problem.ProblemDetails.Title);
         }
     }
-
-    [Theory]
-    [InlineData(PreconditionFailedReason.AnswerRequired, HttpStatusCode.UnprocessableEntity)]
-    public void PreconditionFailedResult_AnswerRequired_With_UseProblemDetails_Returns_Its_Status(PreconditionFailedReason reason, HttpStatusCode expected)
-    {
-        Assert.Equal((int)expected, Assert.IsType<ProblemHttpResult>(new PreconditionFailedResult(reason, null).ToMinimalApiResult()).StatusCode);
-        Assert.Equal((int)expected, Assert.IsType<ProblemHttpResult>(new PreconditionFailedResult<TestResultContent>(reason, null).ToMinimalApiResult()).StatusCode);
-    }
-
-    [Fact]
-    public void PreconditionFailedResult_AnswerRequired_Without_ProblemDetails_Returns_UnprocessableEntity()
-    {
-        Assert.IsType<UnprocessableEntity>(new PreconditionFailedResult(PreconditionFailedReason.AnswerRequired, null).ToMinimalApiResult(useProblemDetails: false));
-        Assert.IsType<UnprocessableEntity>(new PreconditionFailedResult<TestResultContent>(PreconditionFailedReason.AnswerRequired, null).ToMinimalApiResult(useProblemDetails: false));
-    }
 }

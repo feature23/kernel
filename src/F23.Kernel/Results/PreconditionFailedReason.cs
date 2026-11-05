@@ -19,12 +19,6 @@ public enum PreconditionFailedReason
     /// Indicates that a conflict with the current state of the resource caused the failure of a precondition.
     /// </summary>
     Conflict = 3,
-
-    /// <summary>
-    /// Indicates that the operation cannot proceed until the caller supplies an answer to a question it raised,
-    /// such as a confirmation or a choice between alternatives.
-    /// </summary>
-    AnswerRequired = 4,
 }
 
 /// <summary>
@@ -45,7 +39,6 @@ internal static class PreconditionFailedReasonExtensions
         PreconditionFailedReason.NotFound => "A requested resource was not found.",
         PreconditionFailedReason.ConcurrencyMismatch => "A concurrency mismatch occurred.",
         PreconditionFailedReason.Conflict => "A conflict occurred with the current state of the resource.",
-        PreconditionFailedReason.AnswerRequired => "The operation needs an answer before it can proceed.",
         _ => throw new ArgumentOutOfRangeException(nameof(reason), reason, null)
     };
 }

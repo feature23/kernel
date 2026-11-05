@@ -22,11 +22,10 @@ public static class MinimalApiResultExtensions
     /// An <see cref="IResult"/> that represents the appropriate response:
     /// <list type="bullet">
     /// <item><see cref="NoContent"/> for a <see cref="SuccessResult"/>.</item>
-    /// <item><see cref="ProblemHttpResult"/> with RFC7807 <see cref="Microsoft.AspNetCore.Mvc.ProblemDetails"/> for any non-successful result if <paramref name="useProblemDetails"/> is <c>true</c>. For a precondition failure the status follows the reason (404 for <see cref="PreconditionFailedReason.NotFound"/>, 412 for <see cref="PreconditionFailedReason.ConcurrencyMismatch"/>, 409 for <see cref="PreconditionFailedReason.Conflict"/>, 422 for <see cref="PreconditionFailedReason.AnswerRequired"/>), and the reason is in a <c>reason</c> extension member.</item>
+    /// <item><see cref="ProblemHttpResult"/> with RFC7807 <see cref="Microsoft.AspNetCore.Mvc.ProblemDetails"/> for any non-successful result if <paramref name="useProblemDetails"/> is <c>true</c>. For a precondition failure the status follows the reason (404 for <see cref="PreconditionFailedReason.NotFound"/>, 412 for <see cref="PreconditionFailedReason.ConcurrencyMismatch"/>, 409 for <see cref="PreconditionFailedReason.Conflict"/>), and the reason is in a <c>reason</c> extension member.</item>
     /// <item><see cref="NotFound"/> for a <see cref="PreconditionFailedResult"/> with a reason of <see cref="PreconditionFailedReason.NotFound"/> if <paramref name="useProblemDetails"/> is <c>false</c>.</item>
     /// <item><see cref="StatusCodeHttpResult"/> with status code 412 for a <see cref="PreconditionFailedResult"/> with a reason of <see cref="PreconditionFailedReason.ConcurrencyMismatch"/> if <paramref name="useProblemDetails"/> is <c>false</c>.</item>
     /// <item><see cref="Conflict"/> for a <see cref="PreconditionFailedResult"/> with a reason of <see cref="PreconditionFailedReason.Conflict"/> if <paramref name="useProblemDetails"/> is <c>false</c>.</item>
-    /// <item><see cref="UnprocessableEntity"/> for a <see cref="PreconditionFailedResult"/> with a reason of <see cref="PreconditionFailedReason.AnswerRequired"/> if <paramref name="useProblemDetails"/> is <c>false</c>.</item>
     /// <item><see cref="BadRequest"/> with model state populated for a <see cref="ValidationFailedResult"/> if <paramref name="useProblemDetails"/> is <c>false</c>.</item>
     /// <item><see cref="ForbidHttpResult"/> for an <see cref="Kernel.Results.UnauthorizedResult"/> if <paramref name="useProblemDetails"/> is <c>false</c>.</item>
     /// </list>
@@ -51,8 +50,6 @@ public static class MinimalApiResultExtensions
                 => HttpResults.StatusCode((int) HttpStatusCode.PreconditionFailed),
             PreconditionFailedResult { Reason: PreconditionFailedReason.Conflict } when !useProblemDetails
                 => HttpResults.Conflict(),
-            PreconditionFailedResult { Reason: PreconditionFailedReason.AnswerRequired } when !useProblemDetails
-                => HttpResults.UnprocessableEntity(),
             ValidationFailedResult validationFailed when useProblemDetails
                 => HttpResults.ValidationProblem(errors: validationFailed.Errors.CreateErrorDictionary(), title: result.Message),
             ValidationFailedResult validationFailed when !useProblemDetails
@@ -79,11 +76,10 @@ public static class MinimalApiResultExtensions
     /// <list type="bullet">
     /// <item><see cref="Ok"/> response for a <see cref="SuccessResult{T}"/> if <paramref name="successMap"/> is not provided.</item>
     /// <item>The result of <paramref name="successMap"/> if provided and the result is a <see cref="SuccessResult{T}"/>.</item>
-    /// <item><see cref="ProblemHttpResult"/> with RFC7807 <see cref="Microsoft.AspNetCore.Mvc.ProblemDetails"/> for any non-successful result if <paramref name="useProblemDetails"/> is <c>true</c>. For a precondition failure the status follows the reason (404 for <see cref="PreconditionFailedReason.NotFound"/>, 412 for <see cref="PreconditionFailedReason.ConcurrencyMismatch"/>, 409 for <see cref="PreconditionFailedReason.Conflict"/>, 422 for <see cref="PreconditionFailedReason.AnswerRequired"/>), and the reason is in a <c>reason</c> extension member.</item>
+    /// <item><see cref="ProblemHttpResult"/> with RFC7807 <see cref="Microsoft.AspNetCore.Mvc.ProblemDetails"/> for any non-successful result if <paramref name="useProblemDetails"/> is <c>true</c>. For a precondition failure the status follows the reason (404 for <see cref="PreconditionFailedReason.NotFound"/>, 412 for <see cref="PreconditionFailedReason.ConcurrencyMismatch"/>, 409 for <see cref="PreconditionFailedReason.Conflict"/>), and the reason is in a <c>reason</c> extension member.</item>
     /// <item><see cref="NotFound"/> for a <see cref="PreconditionFailedResult{T}"/> with a reason of <see cref="PreconditionFailedReason.NotFound"/> if <paramref name="useProblemDetails"/> is <c>false</c>.</item>
     /// <item><see cref="StatusCodeHttpResult"/> with status code 412 for a <see cref="PreconditionFailedResult{T}"/> with a reason of <see cref="PreconditionFailedReason.ConcurrencyMismatch"/> if <paramref name="useProblemDetails"/> is <c>false</c>.</item>
     /// <item><see cref="Conflict"/> for a <see cref="PreconditionFailedResult{T}"/> with a reason of <see cref="PreconditionFailedReason.Conflict"/> if <paramref name="useProblemDetails"/> is <c>false</c>.</item>
-    /// <item><see cref="UnprocessableEntity"/> for a <see cref="PreconditionFailedResult{T}"/> with a reason of <see cref="PreconditionFailedReason.AnswerRequired"/> if <paramref name="useProblemDetails"/> is <c>false</c>.</item>
     /// <item><see cref="BadRequest"/> with model state populated for a <see cref="ValidationFailedResult{T}"/> if <paramref name="useProblemDetails"/> is <c>false</c>.</item>
     /// <item><see cref="ForbidHttpResult"/> for an <see cref="UnauthorizedResult{T}"/> if <paramref name="useProblemDetails"/> is <c>false</c>.</item>
     /// </list>
@@ -106,8 +102,6 @@ public static class MinimalApiResultExtensions
                 => HttpResults.StatusCode((int)HttpStatusCode.PreconditionFailed),
             PreconditionFailedResult<T> { Reason: PreconditionFailedReason.Conflict } when !useProblemDetails
                 => HttpResults.Conflict(),
-            PreconditionFailedResult<T> { Reason: PreconditionFailedReason.AnswerRequired } when !useProblemDetails
-                => HttpResults.UnprocessableEntity(),
             ValidationFailedResult<T> validationFailed when useProblemDetails
                 => HttpResults.ValidationProblem(errors: validationFailed.Errors.CreateErrorDictionary(), title: result.Message),
             ValidationFailedResult<T> validationFailed when !useProblemDetails

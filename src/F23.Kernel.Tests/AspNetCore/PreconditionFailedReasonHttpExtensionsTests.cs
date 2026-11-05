@@ -22,7 +22,6 @@ public class PreconditionFailedReasonHttpExtensionsTests
     [InlineData(PreconditionFailedReason.NotFound, HttpStatusCode.NotFound)]
     [InlineData(PreconditionFailedReason.ConcurrencyMismatch, HttpStatusCode.PreconditionFailed)]
     [InlineData(PreconditionFailedReason.Conflict, HttpStatusCode.Conflict)]
-    [InlineData(PreconditionFailedReason.AnswerRequired, HttpStatusCode.UnprocessableEntity)]
     public void Reason_MapsToItsStatusCode(PreconditionFailedReason reason, HttpStatusCode expected)
     {
         Assert.Equal(expected, reason.ToHttpStatusCode());

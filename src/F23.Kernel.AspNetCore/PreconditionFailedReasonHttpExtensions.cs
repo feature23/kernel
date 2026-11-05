@@ -28,7 +28,6 @@ internal static class PreconditionFailedReasonHttpExtensions
         PreconditionFailedReason.NotFound => HttpStatusCode.NotFound,
         PreconditionFailedReason.ConcurrencyMismatch => HttpStatusCode.PreconditionFailed,
         PreconditionFailedReason.Conflict => HttpStatusCode.Conflict,
-        PreconditionFailedReason.AnswerRequired => HttpStatusCode.UnprocessableEntity,
         _ => throw new ArgumentOutOfRangeException(nameof(reason), reason, null)
     };
 }

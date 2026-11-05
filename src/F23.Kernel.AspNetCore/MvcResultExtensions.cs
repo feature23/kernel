@@ -21,11 +21,10 @@ public static class MvcResultExtensions
     /// An <see cref="IActionResult"/> representing the HTTP response:
     /// <list type="bullet">
     /// <item><see cref="NoContentResult"/> for <see cref="SuccessResult"/>.</item>
-    /// <item><see cref="ObjectResult"/> with <see cref="ProblemDetails"/> for any non-successful result if <paramref name="useProblemDetails"/> is <c>true</c>. For a precondition failure the status follows the reason (404 for <see cref="PreconditionFailedReason.NotFound"/>, 412 for <see cref="PreconditionFailedReason.ConcurrencyMismatch"/>, 409 for <see cref="PreconditionFailedReason.Conflict"/>, 422 for <see cref="PreconditionFailedReason.AnswerRequired"/>), and the reason is in a <c>reason</c> extension member.</item>
+    /// <item><see cref="ObjectResult"/> with <see cref="ProblemDetails"/> for any non-successful result if <paramref name="useProblemDetails"/> is <c>true</c>. For a precondition failure the status follows the reason (404 for <see cref="PreconditionFailedReason.NotFound"/>, 412 for <see cref="PreconditionFailedReason.ConcurrencyMismatch"/>, 409 for <see cref="PreconditionFailedReason.Conflict"/>), and the reason is in a <c>reason</c> extension member.</item>
     /// <item><see cref="NotFoundResult"/> for a <see cref="PreconditionFailedResult"/> indicating <see cref="PreconditionFailedReason.NotFound"/> if <paramref name="useProblemDetails"/> is <c>false</c>.</item>
     /// <item><see cref="StatusCodeResult"/> with HTTP status code 412 for a <see cref="PreconditionFailedResult"/> indicating <see cref="PreconditionFailedReason.ConcurrencyMismatch"/> if <paramref name="useProblemDetails"/> is <c>false</c>.</item>
     /// <item><see cref="ConflictResult"/> for a <see cref="PreconditionFailedResult"/> indicating <see cref="PreconditionFailedReason.Conflict"/> if <paramref name="useProblemDetails"/> is <c>false</c>.</item>
-    /// <item><see cref="UnprocessableEntityResult"/> for a <see cref="PreconditionFailedResult"/> with a reason of <see cref="PreconditionFailedReason.AnswerRequired"/> if <paramref name="useProblemDetails"/> is <c>false</c>.</item>
     /// <item><see cref="BadRequestObjectResult"/> with model state populated for a <see cref="ValidationFailedResult"/> if <paramref name="useProblemDetails"/> is <c>false</c>.</item>
     /// <item><see cref="ForbidResult"/> in case of an <see cref="UnauthorizedResult"/> if <paramref name="useProblemDetails"/> is <c>false</c>.</item>
     /// </list>
@@ -50,8 +49,6 @@ public static class MvcResultExtensions
                 => new StatusCodeResult((int) HttpStatusCode.PreconditionFailed),
             PreconditionFailedResult { Reason: PreconditionFailedReason.Conflict } when !useProblemDetails
                 => new ConflictResult(),
-            PreconditionFailedResult { Reason: PreconditionFailedReason.AnswerRequired } when !useProblemDetails
-                => new UnprocessableEntityResult(),
             ValidationFailedResult validationFailed when useProblemDetails
                 => new ObjectResult(new ValidationProblemDetails(validationFailed.Errors.ToModelState())
                 {
@@ -86,11 +83,10 @@ public static class MvcResultExtensions
     /// <list type="bullet">
     /// <item>The result of <paramref name="successMap"/>, if specified, for a <see cref="SuccessResult{T}"/>.</item>
     /// <item><see cref="OkObjectResult"/> for a <see cref="SuccessResult{T}"/>, when <paramref name="successMap"/> is not specified.</item>
-    /// <item><see cref="ObjectResult"/> with <see cref="ProblemDetails"/> for any non-successful result if <paramref name="useProblemDetails"/> is <c>true</c>. For a precondition failure the status follows the reason (404 for <see cref="PreconditionFailedReason.NotFound"/>, 412 for <see cref="PreconditionFailedReason.ConcurrencyMismatch"/>, 409 for <see cref="PreconditionFailedReason.Conflict"/>, 422 for <see cref="PreconditionFailedReason.AnswerRequired"/>), and the reason is in a <c>reason</c> extension member.</item>
+    /// <item><see cref="ObjectResult"/> with <see cref="ProblemDetails"/> for any non-successful result if <paramref name="useProblemDetails"/> is <c>true</c>. For a precondition failure the status follows the reason (404 for <see cref="PreconditionFailedReason.NotFound"/>, 412 for <see cref="PreconditionFailedReason.ConcurrencyMismatch"/>, 409 for <see cref="PreconditionFailedReason.Conflict"/>), and the reason is in a <c>reason</c> extension member.</item>
     /// <item><see cref="NotFoundResult"/> for a <see cref="PreconditionFailedResult{T}"/> indicating <see cref="PreconditionFailedReason.NotFound"/> if <paramref name="useProblemDetails"/> is <c>false</c>.</item>
     /// <item><see cref="StatusCodeResult"/> with HTTP status code 412 for a <see cref="PreconditionFailedResult{T}"/> indicating <see cref="PreconditionFailedReason.ConcurrencyMismatch"/> if <paramref name="useProblemDetails"/> is <c>false</c>.</item>
     /// <item><see cref="ConflictResult"/> for a <see cref="PreconditionFailedResult{T}"/> indicating <see cref="PreconditionFailedReason.Conflict"/> if <paramref name="useProblemDetails"/> is <c>false</c>.</item>
-    /// <item><see cref="UnprocessableEntityResult"/> for a <see cref="PreconditionFailedResult{T}"/> with a reason of <see cref="PreconditionFailedReason.AnswerRequired"/> if <paramref name="useProblemDetails"/> is <c>false</c>.</item>
     /// <item><see cref="BadRequestObjectResult"/> with model state populated for a <see cref="ValidationFailedResult{T}"/> if <paramref name="useProblemDetails"/> is <c>false</c>.</item>
     /// <item><see cref="ForbidResult"/> in case of an <see cref="UnauthorizedResult{T}"/> if <paramref name="useProblemDetails"/> is <c>false</c>.</item>
     /// </list>
@@ -113,8 +109,6 @@ public static class MvcResultExtensions
                 => new StatusCodeResult((int) HttpStatusCode.PreconditionFailed),
             PreconditionFailedResult<T> { Reason: PreconditionFailedReason.Conflict } when !useProblemDetails
                 => new ConflictResult(),
-            PreconditionFailedResult<T> { Reason: PreconditionFailedReason.AnswerRequired } when !useProblemDetails
-                => new UnprocessableEntityResult(),
             ValidationFailedResult<T> validationFailed when useProblemDetails
                 => new ObjectResult(new ValidationProblemDetails(validationFailed.Errors.ToModelState())
                 {
