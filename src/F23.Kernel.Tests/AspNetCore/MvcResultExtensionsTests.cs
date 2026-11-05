@@ -2,6 +2,7 @@ using System.Net;
 using F23.Hateoas;
 using F23.Kernel.AspNetCore;
 using F23.Kernel.Results;
+using F23.Kernel.Tests.Mocks;
 using Microsoft.AspNetCore.Mvc;
 
 namespace F23.Kernel.Tests.AspNetCore;
@@ -465,5 +466,42 @@ public class MvcResultExtensionsTests
         {
             throw new NotImplementedException();
         }
+    }
+
+    [Theory]
+    [MemberData(nameof(PreconditionFailedReasons.All), MemberType = typeof(PreconditionFailedReasons))]
+    public void PreconditionFailedResult_With_UseProblemDetails_Carries_The_Reason(PreconditionFailedReason reason)
+    {
+        // Act
+        var plain = new PreconditionFailedResult(reason, "message").ToActionResult(useProblemDetails: true);
+        var typed = new PreconditionFailedResult<TestResultContent>(reason, "message").ToActionResult(useProblemDetails: true);
+
+        // Assert
+        foreach (var actionResult in new[] { plain, typed })
+        {
+            var objectResult = Assert.IsType<ObjectResult>(actionResult);
+            var problemDetails = Assert.IsType<ProblemDetails>(objectResult.Value);
+            Assert.Equal(reason.ToString(), problemDetails.Extensions["reason"]);
+            Assert.Equal("message", problemDetails.Title);
+            Assert.Equal(problemDetails.Status, objectResult.StatusCode);
+        }
+    }
+
+    [Theory]
+    [InlineData(PreconditionFailedReason.AnswerRequired, HttpStatusCode.UnprocessableEntity)]
+    public void PreconditionFailedResult_AnswerRequired_With_UseProblemDetails_Returns_Its_Status(PreconditionFailedReason reason, HttpStatusCode expected)
+    {
+        var plain = new PreconditionFailedResult(reason, null).ToActionResult(useProblemDetails: true);
+        var typed = new PreconditionFailedResult<TestResultContent>(reason, null).ToActionResult(useProblemDetails: true);
+
+        Assert.Equal((int)expected, Assert.IsType<ObjectResult>(plain).StatusCode);
+        Assert.Equal((int)expected, Assert.IsType<ObjectResult>(typed).StatusCode);
+    }
+
+    [Fact]
+    public void PreconditionFailedResult_AnswerRequired_Returns_UnprocessableEntityResult()
+    {
+        Assert.IsType<UnprocessableEntityResult>(new PreconditionFailedResult(PreconditionFailedReason.AnswerRequired, null).ToActionResult(useProblemDetails: false));
+        Assert.IsType<UnprocessableEntityResult>(new PreconditionFailedResult<TestResultContent>(PreconditionFailedReason.AnswerRequired, null).ToActionResult(useProblemDetails: false));
     }
 }
