@@ -2,6 +2,7 @@ using System.Net;
 using F23.Hateoas;
 using F23.Kernel.AspNetCore;
 using F23.Kernel.Results;
+using F23.Kernel.Tests.Mocks;
 using Microsoft.AspNetCore.Mvc;
 
 namespace F23.Kernel.Tests.AspNetCore;
@@ -464,6 +465,25 @@ public class MvcResultExtensionsTests
         public override Result Map()
         {
             throw new NotImplementedException();
+        }
+    }
+
+    [Theory]
+    [MemberData(nameof(PreconditionFailedReasons.All), MemberType = typeof(PreconditionFailedReasons))]
+    public void PreconditionFailedResult_With_UseProblemDetails_Carries_The_Reason(PreconditionFailedReason reason)
+    {
+        // Act
+        var plain = new PreconditionFailedResult(reason, "message").ToActionResult(useProblemDetails: true);
+        var typed = new PreconditionFailedResult<TestResultContent>(reason, "message").ToActionResult(useProblemDetails: true);
+
+        // Assert
+        foreach (var actionResult in new[] { plain, typed })
+        {
+            var objectResult = Assert.IsType<ObjectResult>(actionResult);
+            var problemDetails = Assert.IsType<ProblemDetails>(objectResult.Value);
+            Assert.Equal(reason.ToString(), problemDetails.Extensions["reason"]);
+            Assert.Equal("message", problemDetails.Title);
+            Assert.Equal(problemDetails.Status, objectResult.StatusCode);
         }
     }
 }

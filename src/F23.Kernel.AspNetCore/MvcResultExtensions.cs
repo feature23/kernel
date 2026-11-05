@@ -21,7 +21,7 @@ public static class MvcResultExtensions
     /// An <see cref="IActionResult"/> representing the HTTP response:
     /// <list type="bullet">
     /// <item><see cref="NoContentResult"/> for <see cref="SuccessResult"/>.</item>
-    /// <item><see cref="ObjectResult"/> with <see cref="ProblemDetails"/> for any non-successful result if <paramref name="useProblemDetails"/> is <c>true</c>.</item>
+    /// <item><see cref="ObjectResult"/> with <see cref="ProblemDetails"/> for any non-successful result if <paramref name="useProblemDetails"/> is <c>true</c>. For a precondition failure the status follows the reason (404 for <see cref="PreconditionFailedReason.NotFound"/>, 412 for <see cref="PreconditionFailedReason.ConcurrencyMismatch"/>, 409 for <see cref="PreconditionFailedReason.Conflict"/>), and the reason is in a <c>reason</c> extension member.</item>
     /// <item><see cref="NotFoundResult"/> for a <see cref="PreconditionFailedResult"/> indicating <see cref="PreconditionFailedReason.NotFound"/> if <paramref name="useProblemDetails"/> is <c>false</c>.</item>
     /// <item><see cref="StatusCodeResult"/> with HTTP status code 412 for a <see cref="PreconditionFailedResult"/> indicating <see cref="PreconditionFailedReason.ConcurrencyMismatch"/> if <paramref name="useProblemDetails"/> is <c>false</c>.</item>
     /// <item><see cref="ConflictResult"/> for a <see cref="PreconditionFailedResult"/> indicating <see cref="PreconditionFailedReason.Conflict"/> if <paramref name="useProblemDetails"/> is <c>false</c>.</item>
@@ -41,16 +41,12 @@ public static class MvcResultExtensions
                 => new NoContentResult(),
             AggregateResult { IsSuccess: false, Results.Count: > 0 } aggregateResult
                 => aggregateResult.Results.First(i => !i.IsSuccess).ToActionResult(useProblemDetails),
-            PreconditionFailedResult { Reason: PreconditionFailedReason.NotFound } when useProblemDetails
-                => result.ToProblemDetailsResult(HttpStatusCode.NotFound),
+            PreconditionFailedResult preconditionFailed when useProblemDetails
+                => result.ToProblemDetailsResult(preconditionFailed.Reason),
             PreconditionFailedResult { Reason: PreconditionFailedReason.NotFound } when !useProblemDetails
                 => new NotFoundResult(),
-            PreconditionFailedResult { Reason: PreconditionFailedReason.ConcurrencyMismatch } when useProblemDetails
-                => result.ToProblemDetailsResult(HttpStatusCode.PreconditionFailed),
             PreconditionFailedResult { Reason: PreconditionFailedReason.ConcurrencyMismatch } when !useProblemDetails
                 => new StatusCodeResult((int) HttpStatusCode.PreconditionFailed),
-            PreconditionFailedResult { Reason: PreconditionFailedReason.Conflict } when useProblemDetails
-                => result.ToProblemDetailsResult(HttpStatusCode.Conflict),
             PreconditionFailedResult { Reason: PreconditionFailedReason.Conflict } when !useProblemDetails
                 => new ConflictResult(),
             ValidationFailedResult validationFailed when useProblemDetails
@@ -87,7 +83,7 @@ public static class MvcResultExtensions
     /// <list type="bullet">
     /// <item>The result of <paramref name="successMap"/>, if specified, for a <see cref="SuccessResult{T}"/>.</item>
     /// <item><see cref="OkObjectResult"/> for a <see cref="SuccessResult{T}"/>, when <paramref name="successMap"/> is not specified.</item>
-    /// <item><see cref="ObjectResult"/> with <see cref="ProblemDetails"/> for any non-successful result if <paramref name="useProblemDetails"/> is <c>true</c>.</item>
+    /// <item><see cref="ObjectResult"/> with <see cref="ProblemDetails"/> for any non-successful result if <paramref name="useProblemDetails"/> is <c>true</c>. For a precondition failure the status follows the reason (404 for <see cref="PreconditionFailedReason.NotFound"/>, 412 for <see cref="PreconditionFailedReason.ConcurrencyMismatch"/>, 409 for <see cref="PreconditionFailedReason.Conflict"/>), and the reason is in a <c>reason</c> extension member.</item>
     /// <item><see cref="NotFoundResult"/> for a <see cref="PreconditionFailedResult{T}"/> indicating <see cref="PreconditionFailedReason.NotFound"/> if <paramref name="useProblemDetails"/> is <c>false</c>.</item>
     /// <item><see cref="StatusCodeResult"/> with HTTP status code 412 for a <see cref="PreconditionFailedResult{T}"/> indicating <see cref="PreconditionFailedReason.ConcurrencyMismatch"/> if <paramref name="useProblemDetails"/> is <c>false</c>.</item>
     /// <item><see cref="ConflictResult"/> for a <see cref="PreconditionFailedResult{T}"/> indicating <see cref="PreconditionFailedReason.Conflict"/> if <paramref name="useProblemDetails"/> is <c>false</c>.</item>
@@ -105,16 +101,12 @@ public static class MvcResultExtensions
                 => successMap(success.Value),
             SuccessResult<T> success
                 => new OkObjectResult(new HypermediaResponse(success.Value!)), // [!]: TODO: Fix nullability issue in F23.Hateoas
-            PreconditionFailedResult<T> { Reason: PreconditionFailedReason.NotFound } when useProblemDetails
-                => result.ToProblemDetailsResult(HttpStatusCode.NotFound),
+            PreconditionFailedResult<T> preconditionFailed when useProblemDetails
+                => result.ToProblemDetailsResult(preconditionFailed.Reason),
             PreconditionFailedResult<T> { Reason: PreconditionFailedReason.NotFound } when !useProblemDetails
                 => new NotFoundResult(),
-            PreconditionFailedResult<T> { Reason: PreconditionFailedReason.ConcurrencyMismatch } when useProblemDetails
-                => result.ToProblemDetailsResult(HttpStatusCode.PreconditionFailed),
             PreconditionFailedResult<T> { Reason: PreconditionFailedReason.ConcurrencyMismatch } when !useProblemDetails
                 => new StatusCodeResult((int) HttpStatusCode.PreconditionFailed),
-            PreconditionFailedResult<T> { Reason: PreconditionFailedReason.Conflict } when useProblemDetails
-                => result.ToProblemDetailsResult(HttpStatusCode.Conflict),
             PreconditionFailedResult<T> { Reason: PreconditionFailedReason.Conflict } when !useProblemDetails
                 => new ConflictResult(),
             ValidationFailedResult<T> validationFailed when useProblemDetails
@@ -154,4 +146,20 @@ public static class MvcResultExtensions
         {
             StatusCode = (int)statusCode,
         };
+
+    private static IActionResult ToProblemDetailsResult(this Result result, PreconditionFailedReason reason)
+    {
+        var statusCode = reason.ToHttpStatusCode();
+        var problemDetails = new ProblemDetails
+        {
+            Title = result.Message,
+            Status = (int)statusCode,
+        };
+        problemDetails.Extensions[PreconditionFailedReasonHttpExtensions.ReasonExtension] = reason.ToString();
+
+        return new ObjectResult(problemDetails)
+        {
+            StatusCode = (int)statusCode,
+        };
+    }
 }

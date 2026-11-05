@@ -2,6 +2,7 @@ using System.Net;
 using F23.Hateoas;
 using F23.Kernel.AspNetCore;
 using F23.Kernel.Results;
+using F23.Kernel.Tests.Mocks;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
@@ -427,6 +428,22 @@ public class MinimalApiResultExtensionsTests
         public override Result Map()
         {
             throw new NotImplementedException();
+        }
+    }
+
+    [Theory]
+    [MemberData(nameof(PreconditionFailedReasons.All), MemberType = typeof(PreconditionFailedReasons))]
+    public void PreconditionFailedResult_With_UseProblemDetails_Carries_The_Reason(PreconditionFailedReason reason)
+    {
+        foreach (var httpResult in new[]
+                 {
+                     new PreconditionFailedResult(reason, "message").ToMinimalApiResult(),
+                     new PreconditionFailedResult<TestResultContent>(reason, "message").ToMinimalApiResult()
+                 })
+        {
+            var problem = Assert.IsType<ProblemHttpResult>(httpResult);
+            Assert.Equal(reason.ToString(), problem.ProblemDetails.Extensions["reason"]);
+            Assert.Equal("message", problem.ProblemDetails.Title);
         }
     }
 }
